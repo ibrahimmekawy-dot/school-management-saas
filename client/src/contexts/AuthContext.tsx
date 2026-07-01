@@ -62,6 +62,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq("email", email)
         .single();
 
+      // حساب المسؤول العام التجريبي (Master Account)
+      if (email === "admin@nabeet.com" && password === "123456") {
+        const masterUser: AuthUser = {
+          id: "master-admin-id",
+          email: "admin@nabeet.com",
+          name: "المسؤول العام",
+          role: "admin",
+          schoolName: "النظام الرئيسي",
+        };
+        const sessionToken = `master_session_${Date.now()}`;
+        localStorage.setItem("auth_user", JSON.stringify(masterUser));
+        localStorage.setItem("session_token", sessionToken);
+        setUser(masterUser);
+        toast.success("تم تسجيل الدخول كمسؤول عام!");
+        return;
+      }
+
       if (adminError || !admins) {
         throw new Error("البريد الإلكتروني أو كلمة المرور غير صحيحة");
       }
